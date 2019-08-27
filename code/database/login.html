@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<title>Quest 5 Client</title>
+<script src="/socket.io/socket.io.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+<style>
+body,h1 {font-family: "Raleway", sans-serif}
+body, html {height: 100%}
+.bgimg {
+    /* background-image: url('/w3images/forestbridge.jpg'); */
+    min-height: 100%;
+    background-position: center;
+    background-size: cover;
+}
+</style>
+<body>
+<div class="bgimg w3-display-container w3-text-black">
+  <div class="w3-display-topleft w3-padding-large w3-xlarge">
+      <p class="w3-center"> <a href="/" class="w3-button w3-black w3-round w3-padding-large w3-large">Return</a></p>
+  </div>
+  <div class="w3-display-topmiddle w3-padding-small">
+    <h1 class="w3-jumbo">DATABASE CONTENT</h1>
+    <hr class="w3-border-grey" style="margin:auto;width:40%">
+  </div>
+
+  <div class="w3-padding-large">
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+      <h1 class="w3-left w3-large w3-text-dark-grey">Current Database Entry
+        <!-- <div id="current_entry">  Testing  </div> -->
+        <div id="testing">Testing</div>
+      </h1>
+      <h1 class="w3-right w3-xlarge w3-text-dark-grey" id="access_status">ACCESS:</h1>
+  </div>
+
+  <div class="w3-container">
+  <hr>
+  <div class="w3-center">
+    <p w3-class="w3-large">Previous Entries</p>
+  </div>
+<div class="w3-responsive w3-card-4">
+<table class="w3-table w3-striped w3-bordered">
+<thead>
+<tr class="w3-theme w3-center">
+  <th>Fob ID</th>
+  <th>Hub ID</th>
+  <th>Smoke</th>
+</tr>
+</thead>
+<tbody id="demo">
+
+</tbody>
+</table>
+
+</div>
+<hr>
+<br>
+  <div class="w3-display-bottommiddle w3-padding-large">
+    <a href="https://github.com/BU-EC444/Quest5-Team16-Zaveri-Surman-Norman" target="_blank">GitHub Repository Link</a>
+  </div>
+</div>
+
+
+</body>
+<script>
+  var socket = io();
+
+  socket.on('data_transmit', function(data) {
+    console.log(data);
+    //var time = data[0].time;
+    var txt = '';
+    document.getElementById('testing').innerHTML = JSON.stringify(data[data.length-1]);
+    //document.getElementById('demo').innerHTML = JSON.stringify(data[0].temp);
+  for ( i = data.length-1; i >= 0; i= i - 1) {
+    if (data[i].smoke) {
+        txt += '<tr class="w3-green"><td>'+JSON.stringify(data[i].fob_id)+'</td><td>'+JSON.stringify(data[i].hub_id)+'</td><td>'+JSON.stringify(data[i].smoke)+'</td></tr>';
+
+    }
+    else {
+        txt += '<tr class="w3-red"><td>'+JSON.stringify(data[i].fob_id)+'</td><td>'+JSON.stringify(data[i].hub_id)+'</td><td>'+JSON.stringify(data[i].smoke)+'</td></tr>';
+
+    }
+
+  };
+  if (data[data.length-1].smoke){
+    document.getElementById('access_status').innerHTML = "ACCESS GRANTED";
+  }
+  else {
+      document.getElementById('access_status').innerHTML = "ACCESS DENIED";
+  }
+  //document.location.reload(forcedReload);
+  document.getElementById('demo').innerHTML = txt;
+  });
+
+</script>
+</html>
